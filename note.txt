@@ -1,0 +1,40 @@
+# check version
+locust -V
+
+# run locust
+- rename your test file to locustfile.py
+- now you can type in terminal "locust"
+- you can use locust in terms of web browser to test you api
+
+# run locust in terminal
+- locust --headless --users 10 --spawn-rate 1 -H http://127.0.0.1:8000 # change your hosts
+-> run locust in terminal
+locust -f locustfile.py
+-> with many user class 
+locust -f locustfile2.py MobileUser WebUser AdminUser
+-> with host (--host)
+locust -f locustfile2.py MobileUser WebUser AdminUser --host http://127.0.0.1:8000
+-> set run time (when the time is out -> on_stop will be called)
+locust -f locustfile2.py MobileUser WebUser AdminUser --host http://127.0.0.1:8000 --run-time 20
+(set run-time 20 seconds -> when time is out on_stop function will be executed)
+-> run with specific tag decorator
+locust -f locustfile3.py TagClass --host http://127.0.0.1:8000 --run-time 20 --tags tag1 tag3
+(locust will run the task with has tag1, tag3 decorator)
+-> run without tag decoratorm
+locust -f locustfile3.py TagClass --host http://127.0.0.1:8000 --run-time 20 --exlude-tags tag1
+
+
+#  for high load test we need to test in multiple process -> set worker -> read more !!!
+
+# NOTE
+rps - request pre second
+best practise -> add response.success() and response.failure() for each api call.
+
+
+#time
+wait_time = how long each request need to wait before following request be execute.
+constant(int) = wait exact time
+between(int, int) = wait random time
+constant_throughput = number of **task that execute per second regardless the wait_time
+constant_pacing = make sure ว่าแต่ละ request ต้องรอเวลาตามที่ set ไว้แน่ๆ -> if request ก่อนหน้า execute นานกว่าเวลาที่ set ไว้ => start new task immediately
+                = คิดเวลาจาก set time - previous task execution time
